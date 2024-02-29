@@ -1,0 +1,120 @@
+esphome:
+  name: pico
+  friendly_name: pico
+
+rp2040:
+  board: rpipicow
+  framework:
+    # Required until https://github.com/platformio/platform-raspberrypi/pull/36 is merged
+    platform_version: https://github.com/maxgerhardt/platform-raspberrypi.git
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "5DWfmi80oGJq35rjlN4z+YLUSfwcCe5z6Xc99yp7nls="
+
+ota:
+  password: "9e696f9b7c1b4d8f3f98385c4830b0a1"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot in case wifi connection fails
+  ap:
+    ssid: "Pico Fallback Hotspot"
+    password: "weZn9OX2eGUe"
+
+#temperature inbuile of pico w
+sensor:
+  - platform: internal_temperature
+    name: "PICO W Temp"
+
+switch:
+  - platform: gpio
+    name: "Tube_Light"
+    pin: GPIO0
+    id: a01
+    inverted: true
+  
+  - platform: gpio
+    name: "FAN"
+    pin: GPIO1
+    id: a02
+    inverted: true
+  
+  - platform: gpio
+    name: "Night_Lamp"
+    pin: GPIO2
+    id: a03
+    inverted: true
+
+  - platform: gpio
+    name: "Plug_1"
+    pin: GPIO3
+    id: a04
+    inverted: true
+
+
+# manuall switches are initilize and used below as a binary sensor
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO12  # Replace with the actual GPIO pin to which the latch switch is connected
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Latch Switch1"
+    id: latch_switch1
+    on_press:
+      then:
+        - switch.turn_off: a01
+    on_release:
+      then:
+        - switch.turn_on: a01
+
+
+  - platform: gpio
+    pin:
+      number: GPIO13  # Replace with the actual GPIO pin to which the latch switch is connected
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Latch Switch2"
+    id: latch_switch2
+    on_press:
+      then:
+        - switch.turn_off: a02
+    on_release:
+      then:
+        - switch.turn_on: a02
+
+  - platform: gpio
+    pin:
+      number: GPIO14  # Replace with the actual GPIO pin to which the latch switch is connected
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Latch Switch3"
+    id: latch_switch3
+    on_press:
+      then:
+        - switch.turn_off: a03
+    on_release:
+      then:
+        - switch.turn_on: a03
+
+  - platform: gpio
+    pin:
+      number: GPIO15  # Replace with the actual GPIO pin to which the latch switch is connected
+      mode: INPUT_PULLUP
+      inverted: true
+    name: "Latch Switch4"
+    id: latch_switch4
+    on_press:
+      then:
+        - switch.turn_off: a04
+    on_release:
+      then:
+        - switch.turn_on: a04
